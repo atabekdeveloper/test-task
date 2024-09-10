@@ -39,7 +39,7 @@ export const Login: React.FC = () => {
         <div className="flex justify-center">
           <img src={logo} alt="Logo" className="w-12 h-12" />
         </div>
-        <h2 className="text-2xl font-bold text-center text-gray-900">Sign in to your account</h2>
+        <h2 className="text-2xl font-bold text-center text-gray-900">Login to Your Account</h2>
 
         {error && <p className="text-center text-red-500">{error}</p>}
 
@@ -101,7 +101,7 @@ export const Login: React.FC = () => {
                   ></path>
                 </svg>
               ) : (
-                'Sign in'
+                'Login'
               )}
             </button>
           </div>
