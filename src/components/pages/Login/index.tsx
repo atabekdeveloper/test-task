@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthLoginMutation } from 'src/services/index.api';
 
-import logo from 'src/assets/hashtag.png';
+import logo from 'src/assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import { useAuthPersistStore } from 'src/store';
 

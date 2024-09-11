@@ -1,42 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useGetAuthUserQuery } from 'src/services/index.api';
 import { useAuthPersistStore } from 'src/store';
 
+import logo from 'src/assets/logo.png';
+
 export const Dropdown: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const { data: user } = useGetAuthUserQuery();
 
   const signOut = useAuthPersistStore((state) => state.signOut);
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleDropdown = () => setIsOpen((prev) => !prev);
 
   const handleLogout = () => signOut();
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node) &&
+      !buttonRef.current?.contains(event.target as Node)
+    )
+      setIsOpen(false);
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
   return (
     <div className="relative inline-block text-left">
-      <div>
-        <button
-          onClick={toggleDropdown}
-          type="button"
-          className="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none"
-        >
-          <img
-            src={user?.data.image}
-            alt={`${user?.data.firstName} ${user?.data.lastName}`}
-            className="w-8 h-8 rounded-full"
-          />
-        </button>
-      </div>
+      <button
+        ref={buttonRef}
+        onClick={toggleDropdown}
+        type="button"
+        className="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none"
+      >
+        <img
+          src={user?.data.image ?? logo}
+          alt={`${user?.data.firstName} ${user?.data.lastName}`}
+          className="w-8 h-8 rounded-full"
+        />
+      </button>
 
       {isOpen && (
-        <div className="absolute right-0 z-10 w-64 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <div
+          ref={dropdownRef}
+          className="absolute right-0 z-10 w-64 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        >
           <div className="p-4">
             <div className="flex items-center">
               <img
-                src={user?.data.image}
+                src={user?.data.image ?? logo}
                 alt={`${user?.data.firstName} ${user?.data.lastName}`}
                 className="w-12 h-12 rounded-full"
               />

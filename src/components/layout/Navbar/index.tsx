@@ -5,7 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { navLinks } from 'src/data';
 
-import logo from 'src/assets/hashtag.png';
+import logo from 'src/assets/logo.png';
 import { useAuthPersistStore } from 'src/store';
 import { Dropdown } from '../Dropdown';
 
@@ -30,7 +30,8 @@ export const Navbar: React.FC = () => {
             <img alt="Logo" src={logo} className="w-auto h-8" />
           </Link>
         </div>
-        <div className="flex lg:hidden">
+        <div className="flex gap-4 lg:hidden">
+          <Dropdown />
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
@@ -80,26 +81,20 @@ export const Navbar: React.FC = () => {
               <XMarkIcon aria-hidden="true" className="w-6 h-6" />
             </button>
           </div>
-          <div className="flow-root mt-6">
+          <div className="flow-root mt-10">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="py-6 space-y-2">
                 {navLinks.map(({ id, title, link }) => (
                   <Link
                     key={id}
                     to={link}
-                    className="block px-3 py-2 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50"
+                    className={`${
+                      pathname === link && 'bg-primary text-white hover:bg-primary'
+                    } block px-3 py-2 -mx-3 text-base font-semibold leading-7 text-gray-900 rounded-lg hover:bg-gray-50`}
                   >
                     {title}
                   </Link>
                 ))}
-              </div>
-              <div className="py-6">
-                <Link
-                  to="/login"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Log in
-                </Link>
               </div>
             </div>
           </div>

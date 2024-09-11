@@ -1,6 +1,6 @@
 import React from 'react';
 
-import logo from 'src/assets/hashtag.png';
+import logo from 'src/assets/logo.png';
 
 export const Footer: React.FC = () => {
   return (
