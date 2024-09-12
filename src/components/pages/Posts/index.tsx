@@ -1,33 +1,42 @@
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useGetPostsQuery } from 'src/services/index.api';
 import { Loading, Pagination, SearchSortHeader } from 'src/components/shared';
 import { sortPosts } from 'src/data';
+import { useDebounce } from 'src/hooks';
 
 export const Posts: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(0);
 
   const [sortValue, setSortValue] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const debounceValue = useDebounce(searchQuery);
+
+  const selectedSort = useMemo(() => {
+    return sortPosts.find((value) => value.id === sortValue);
+  }, [sortValue]);
 
   const { data: posts, isLoading } = useGetPostsQuery({
-    skip: currentPage + 1,
-    limit: 6,
-    sortBy: findSortEl(sortValue)?.sortBy,
-    order: findSortEl(sortValue)?.order,
+    skip: currentPage,
+    sortBy: selectedSort?.sortBy,
+    order: selectedSort?.order,
+    q: debounceValue,
   });
 
-  function findSortEl(id: number) {
-    return sortPosts.find((value) => value.id === id);
-  }
-
-  const handleSortChange = (sortValue: number) => {
+  const handleSortChange = useCallback((sortValue: number) => {
     setSortValue(sortValue);
-  };
+  }, []);
+  const handleSearchChange = useCallback((searchValue: string) => {
+    setSearchQuery(searchValue);
+  }, []);
   return (
     <>
       <SearchSortHeader
+        searchQuery={searchQuery}
         sortValue={sortValue}
         sortOptions={sortPosts}
         onSortChange={handleSortChange}
+        onSearchChange={handleSearchChange}
       />
       {isLoading && <Loading />}
       <div className="grid grid-cols-1 gap-6 py-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -57,11 +66,7 @@ export const Posts: React.FC = () => {
           </div>
         ))}
       </div>
-      <Pagination
-        page={currentPage}
-        total={Number(((posts?.total ? posts.total : 30) / 5).toFixed(0))}
-        setCurrentPage={setCurrentPage}
-      />
+      <Pagination page={currentPage} total={posts?.total} setCurrentPage={setCurrentPage} />
     </>
   );
 };
