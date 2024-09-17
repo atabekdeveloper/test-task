@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthPersistStore } from 'src/store';
 
 export const Login: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('jamesd');
+  const [password, setPassword] = useState('jamesdpass');
   const [error, setError] = useState('');
 
   const navigate = useNavigate();

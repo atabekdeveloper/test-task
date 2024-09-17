@@ -11,8 +11,8 @@ const useGetAuthUserQuery = () => {
     queryFn: fetchGetAuth,
     queryKey: ['auth'],
     onError: (err: any) => {
-      toast.error(err.response.data.message);
       signOut();
+      toast.error(err.response.data.message);
     },
   });
 };
